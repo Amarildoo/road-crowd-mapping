@@ -1,6 +1,5 @@
 import logger from '../util/logger';
 import {IUserInput, IUserResponse, UserResponse} from "../model/user.model";
-import {number} from "zod";
 
 export function createUser(userRequest: IUserInput) : IUserResponse | undefined {
     try {
@@ -27,7 +26,6 @@ export async function authenticate(username: string, password: string) {
     //todo: get all users from db
 }
 
-export async function deleteById(id: number) {
-    
+export function deleteById(id: number) {
+    //todo: delete user from db
 }
-

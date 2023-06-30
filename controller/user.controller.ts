@@ -1,13 +1,14 @@
 import {Request, Response} from "express";
 import logger from "../util/logger";
-import {createUser, getAllUsers} from "../service/user.service";
+import {createUser, deleteById, getAllUsers} from "../service/user.service";
 import {CreateUserInput} from "../schema/user.schema";
-import {omit} from "lodash";
 
 export async function createUserHandler(
     req: Request<{}, {}, CreateUserInput['body']>, res: Response) {
     try {
         const userRequest = req.body;
+        //todo: create role enum and check if user requested valid role name
+
         const userResponse = createUser(userRequest);
         if (!userResponse) {
             return res.status(500)
@@ -28,4 +29,11 @@ export async function getAllUsersHandler(req: Request, res: Response) {
     const resList = getAllUsers();
     res.status(200)
         .send(resList);
+}
+
+export async function deleteUserHandler(req: Request, res: Response) {
+    //todo: check if user is admin
+    const id = req.params.id;
+    deleteById(parseInt(id));
+    res.status(200);
 }
