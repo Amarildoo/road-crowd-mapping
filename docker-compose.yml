@@ -8,3 +8,5 @@ services:
       - NODE_ENV=production
     build:
       context: ./
+    ports:
+      - "3001:3001"

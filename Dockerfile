@@ -16,4 +16,4 @@ WORKDIR /src
 
 RUN yarn build
 
-CMD ["node", "build/src/app.js"]
+CMD ["node", "build/app.js"]
