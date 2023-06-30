@@ -1,0 +1,33 @@
+{
+  "name": "road-crowd-mapping",
+  "version": "1.0.0",
+  "description": "Road Crowd Mapping API as project work of Masters",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Amarildo Gjeçaj",
+  "license": "ISC",
+  "dependencies": {
+    "@types/config": "^3.3.0",
+    "@types/pino": "^7.0.5",
+    "bcrypt": "^5.1.0",
+    "config": "^3.3.9",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.8",
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.17",
+    "@types/lodash": "^4.14.195",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.5"
+  }
+}
