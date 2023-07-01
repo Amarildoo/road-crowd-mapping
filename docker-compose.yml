@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 services:
 
   api:
@@ -10,3 +10,13 @@ services:
       context: ./
     ports:
       - "3001:3001"
+
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rcm-username
+      POSTGRES_PASSWORD: rcm-password
+      POSTGRES_DB: rcm
+    ports:
+      - "5432:5432"
