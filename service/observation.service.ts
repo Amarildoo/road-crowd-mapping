@@ -1,10 +1,22 @@
 import logger from '../util/logger';
-import {IObservationRequest, IObservationResponse, ObservationResponse} from "../model/observation.model";
+import {IObservationRequest, IObservationResponse, Observation, ObservationResponse} from "../model/observation.model";
 
-export function createObservation(observationRequest: IObservationRequest): IObservationResponse | undefined {
+export async function createObservation(observationRequest: IObservationRequest, userId: number)
+    : Promise<IObservationResponse | undefined> {
     try {
         logger.info("creating observation:" + JSON.stringify(observationRequest));
-        //todo: insert observation to db
+
+        let obs = new Observation();
+        obs.created_at = new Date();
+        obs.created_by = userId;
+        obs.description = observationRequest.description;
+        obs.status = ObsStatus.PENDING;
+        obs.gps_lat = observationRequest.latitude;
+        obs.gps_long = observationRequest.longitude;
+        obs.action_at = undefined;
+
+        logger.debug("created observation:" + JSON.stringify(obs));
+        await obs.save();
 
         //todo: get ID from DB insert
         let res = new ObservationResponse(1, observationRequest.description,
@@ -18,8 +30,12 @@ export function createObservation(observationRequest: IObservationRequest): IObs
     }
 }
 
-//todo; set parameter as Enum if Typescript supports it
-export function getAllByStatus(status: string): Array<IObservationResponse> {
+export function getAllByStatus(reqStatusEnum: ObsStatus): Array<IObservationResponse> {
+    //todo: get all users from db
+    return [];
+}
+
+export function getByStatusAndUserId(reqStatusEnum: ObsStatus, userId: number): Array<IObservationResponse> {
     //todo: get all users from db
     return [];
 }

@@ -1,15 +1,9 @@
-import {Request, Response, NextFunction} from "express";
+import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {get} from "lodash";
 import {User} from '../model/user.model';
 
-//custom interface to include extra user properties in request, so they can pass throw middlewares and controller
-export interface UserAuthRequest extends Request {
-    currentUser?: User;
-    isAdmin?: boolean;
-}
-
-const tokenAuthenticator = async (req: UserAuthRequest, res: Response, next: NextFunction) => {
+const tokenAuthenticator = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = get(req, "headers.authorization", "")
             .replace(/^Bearer\s/, "");
@@ -34,7 +28,7 @@ const tokenAuthenticator = async (req: UserAuthRequest, res: Response, next: Nex
 
         //add user to request object, other middlewares and controller might need them :)
         req.currentUser = userFound;
-        req.isAdmin = userFound.role == 'admin';
+        req.isAdmin = userFound.role === 'admin';
 
         // Proceed to the next middleware or route handler
         next();

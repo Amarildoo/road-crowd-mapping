@@ -5,7 +5,6 @@ import {CreateUserInput, UpdateUserInput} from "../schema/user.schema";
 import {IUserResponse, User, UserResponse} from "../model/user.model";
 import {UserRole} from "../model/UserRole";
 import {getValidEnumValue} from "../util/enum.util";
-import {UserAuthRequest} from "../middleware/authentication";
 
 export async function createUserHandler(
     req: Request<{}, {}, CreateUserInput['body']>, res: Response) {
@@ -77,7 +76,7 @@ export async function getAllUsersHandler(req: Request, res: Response) {
     }
 }
 
-export async function deleteUserHandler(req: UserAuthRequest, res: Response) {
+export async function deleteUserHandler(req: Request, res: Response) {
     //manual param validation
     if (!req.params.userId) {
         return res.status(400)

@@ -1,7 +1,6 @@
-import {NextFunction, Response} from "express";
-import {UserAuthRequest} from "./authentication";
+import {Request, NextFunction, Response} from "express";
 
-const adminVerifier = async (req: UserAuthRequest, res: Response, next: NextFunction) => {
+const adminVerifier = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.isAdmin) {
         return res.status(403)
             .json({message: 'Forbidden'})
