@@ -1,28 +1,83 @@
+import {BeforeCreate, BeforeUpdate, Column, DataType, HasMany, Model, Table} from 'sequelize-typescript';
+import {Observation} from "./observation.model";
+import bcrypt from 'bcrypt';
+
+@Table({ tableName: 'user', timestamps: false})
+export class User extends Model<User> {
+    @Column({
+        type: DataType.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    })
+    id!: number;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+        unique: true,
+    })
+    username!: string;
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    password!: string;
+
+    @Column({
+        type: DataType.TEXT,
+        allowNull: false,
+        validate: {
+            isIn: [['user', 'admin']],
+        },
+    })
+    role!: string;
+
+    @HasMany(() => Observation)
+    observations!: Observation[];
+
+    @BeforeCreate
+    static async hashPassword(instance: User) {
+        const hashedPassword = await bcrypt.hash(instance.password, 10);
+        instance.password = hashedPassword;
+    }
+
+    @BeforeUpdate
+    static async hashPasswordOnUpdate(instance: User) {
+        const hashedPassword = await bcrypt.hash(instance.password, 10);
+        instance.password = hashedPassword;
+    }
+
+}
+
 //properties required to create a new user
 export interface IUserInput {
-    email: string;
-    name: string;
+    username: string;
+    password: string;
+    role: string;
+}
+
+export interface IUserUpdateInput {
+    id: number;
+    username: string;
     password: string;
     role: string;
 }
 
 export interface IUserResponse {
     id: number;
-    email: string;
-    name: string;
+    username: string;
     role: string;
 }
 
 export class UserResponse implements IUserResponse {
     id: number;
-    email: string;
-    name: string;
+    username: string;
     role: string;
 
-    constructor(id: number, email: string, name: string, role: string) {
+    constructor(id: number, username: string, role: string) {
         this.id = id;
-        this.email = email;
-        this.name = name;
+        this.username = username;
         this.role = role;
     }
 }

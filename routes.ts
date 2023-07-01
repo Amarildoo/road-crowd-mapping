@@ -1,7 +1,12 @@
 import {Express, Request, Response} from 'express';
-import {createUserHandler, getAllUsersHandler} from "./controller/user.controller";
+import {
+    createUserHandler,
+    deleteUserHandler,
+    getAllUsersHandler,
+    updateUserHandler
+} from "./controller/user.controller";
 import validateResource from "./middleware/ValidateResource";
-import {createUserSchema} from "./schema/user.schema";
+import {createUserSchema, updateUserSchema} from "./schema/user.schema";
 import {createObservationHandler, getObservationsByStatusHandler} from "./controller/observation.controller";
 import {createObservationSchema, statusObsSchema} from "./schema/observation.schema";
 
@@ -16,12 +21,13 @@ function routes(app: Express) {
 
     app.get('/', (req, res) => {
         res.send('Hello World from Express server with TS!')
-    })
+    });
 
     //users routes
     app.post("/users", validateResource(createUserSchema), createUserHandler);
+    app.put("/users", validateResource(updateUserSchema), updateUserHandler);
     app.get("/users", getAllUsersHandler);
-    app.delete("/users/:userId", getAllUsersHandler);
+    app.delete("/users/:userId", deleteUserHandler);
 
     //observation routes
     app.post("/observations", validateResource(createObservationSchema), createObservationHandler);
