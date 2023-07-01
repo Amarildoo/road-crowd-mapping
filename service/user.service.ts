@@ -48,6 +48,10 @@ export async function updateUser(userRequest: IUserUpdateInput): Promise<UserRes
     }
 }
 
+export async function getByUsername(username: string): Promise<User | null> {
+    return User.findOne({where: {username: username}});
+}
+
 export function getAllUsers(): Promise<User[]> {
     return User.findAll();
 }
