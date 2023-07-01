@@ -2,10 +2,12 @@ import 'reflect-metadata';
 import express from 'express';
 import logger from './util/logger';
 import routes from "./routes";
-import sequelize from './database';
 
 //load environment variables
 require('dotenv').config();
+
+//run/import after env variables are loaded
+import sequelize from './database';
 
 //create express instance
 const app = express();
