@@ -1,15 +1,17 @@
 import 'reflect-metadata';
 import express from 'express';
-import config from 'config';
 import logger from './util/logger';
 import routes from "./routes";
 import sequelize from './database';
+
+//load environment variables
+require('dotenv').config();
 
 //create express instance
 const app = express();
 
 //set port from config file
-const port = config.get<number>("port");
+const port = process.env.PORT || 3001;
 
 //configure middlewares
 //add json parser for all requests after this line (meaning all of them in this case (so far))

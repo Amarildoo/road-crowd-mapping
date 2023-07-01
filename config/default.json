@@ -1,4 +1,0 @@
-{
-  "port": 3001,
-  "dbUri": "postgres://postgres:postgres@localhost:5432/rcm"
-}
