@@ -126,16 +126,24 @@ export async function deleteByIdAndUserId(obsId: number, userId: number) {
 }
 
 export async function rejectAllByUser(userId: number): Promise<void> {
+    let condition;
+    if (process.env.ALLOW_OBS_VERDICT_CHANGE !== "true") {
+        condition = {
+            created_by: userId,
+            status: ObsStatus.PENDING
+        }
+    } else {
+        condition = {
+            created_by: userId,
+        }
+    }
+
     try {
         await Observation.update({
                 status: ObsStatus.REJECTED,
                 action_at: new Date()
             },
-            {
-                where: {
-                    created_by: userId,
-                }
-            });
+            {where: condition});
     } catch (e) {
         logger.error("error approving all observations by user id: " + userId);
         throw e;
@@ -143,15 +151,25 @@ export async function rejectAllByUser(userId: number): Promise<void> {
 }
 
 export async function approveAllByUser(userId: number): Promise<void> {
+    let condition;
+    if (process.env.ALLOW_OBS_VERDICT_CHANGE !== "true") {
+        condition = {
+            created_by: userId,
+            status: ObsStatus.PENDING
+        }
+    } else {
+        condition = {
+            created_by: userId,
+        }
+    }
+
     try {
         await Observation.update({
                 status: ObsStatus.ACCEPTED,
                 action_at: new Date()
             },
             {
-                where: {
-                    created_by: userId,
-                }
+                where: condition
             });
     } catch (e) {
         logger.error("error approving all observations by user id: " + userId);
@@ -160,15 +178,25 @@ export async function approveAllByUser(userId: number): Promise<void> {
 }
 
 export async function approveAllByType(obsType: ObsType): Promise<void> {
+    let condition;
+    if (process.env.ALLOW_OBS_VERDICT_CHANGE !== "true") {
+        condition = {
+            type: obsType,
+            status: ObsStatus.PENDING
+        }
+    } else {
+        condition = {
+            type: obsType,
+        }
+    }
+
     try {
         await Observation.update({
                 status: ObsStatus.ACCEPTED,
                 action_at: new Date()
             },
             {
-                where: {
-                    type: obsType,
-                }
+                where: condition
             });
     } catch (e) {
         logger.error("error approving all observations by type: " + obsType);
@@ -178,6 +206,19 @@ export async function approveAllByType(obsType: ObsType): Promise<void> {
 
 export async function approveObservation(obsId: number): Promise<void> {
     try {
+
+        if (process.env.ALLOW_OBS_VERDICT_CHANGE !== "true") {
+            //check if obs exists and has not been approved yet
+            const obsFound = await Observation.findOne({
+                where: {
+                    id: obsId,
+                    status: ObsStatus.PENDING
+                }
+            });
+            if (!obsFound)
+                throw Error("Observation not found or already assigned a verdict!");
+        }
+
         await Observation.update({
                 status: ObsStatus.ACCEPTED,
                 action_at: new Date()
@@ -195,6 +236,20 @@ export async function approveObservation(obsId: number): Promise<void> {
 
 export async function rejectObservation(obsId: number): Promise<void> {
     try {
+
+        if (process.env.ALLOW_OBS_VERDICT_CHANGE !== "true") {
+            //check if obs exists and has not been approved yet
+            const obsFound = await Observation.findOne({
+                where: {
+                    id: obsId,
+                    status: ObsStatus.PENDING
+                }
+            });
+            if (!obsFound)
+                throw Error("Observation not found or already assigned a verdict!");
+        }
+
+        //set status as rejected and update timestamp
         await Observation.update({
                 status: ObsStatus.REJECTED.valueOf(),
                 action_at: new Date()

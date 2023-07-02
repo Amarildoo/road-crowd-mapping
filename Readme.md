@@ -31,6 +31,5 @@ Initial admin is created on DB creation (docker service) with username "admin" a
 ### 💌 Todo:
 
 - add API to accept/reject a list of ids
-- forbid rejection/approval if status already changed
 - support geospatial data through PostGIS extension
 - create Web-client
