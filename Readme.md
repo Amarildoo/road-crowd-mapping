@@ -23,13 +23,13 @@ Application is built with Node.js, Express, Typescript, Sequelize, Zod, JWT, Pos
 
 ## 🐛 Test
 
-No unit/integration testing is implemented, so grab the <u>rcm.postman_collection.json</u>, and test it manually 🔨  
-Initial admin is created on DB creation (docker service) with username "admin" and password "adminadmin" 🔐  
+🔨 No unit/integration testing is implemented, so grab the <u>rcm.postman_collection.json</u>, and test it manually  
+🔐 Initial admin is created on DB creation (docker service) with username "admin" and password "adminadmin"  
+🚀 Live demo, use url: https://api.rcm.amarildo.xyz 👈
 
 ---
 
 ### 💌 Todo:
 
-- add API to accept/reject a list of ids
 - support geospatial data through PostGIS extension
 - create Web-client
