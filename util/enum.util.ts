@@ -7,3 +7,11 @@ export function getValidEnumValue(value: string, enumObject: any): string | null
     const matchingKey = enumKeys.find((key) => key.toLowerCase() === lowercaseValue);
     return matchingKey ? enumObject[matchingKey] : null;
 }
+
+export function getEnumKeyFromValue(value: number, enumObject: any): string | undefined {
+    for (const key in enumObject) {
+        if (enumObject[key] === value)
+            return key;
+    }
+    return undefined; // Value not found in the enum
+}

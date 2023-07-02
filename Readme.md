@@ -30,7 +30,6 @@ Initial admin is created on DB creation (docker service) with username "admin" a
 
 ### 💌 Todo:
 
-- return type and status as string (instead of enum number) in Observation result
 - add API to accept/reject a list of ids 
 - custom exceptions
 - allow user to change its own password

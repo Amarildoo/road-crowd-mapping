@@ -1,5 +1,8 @@
 import {Model, Table, Column, DataType, ForeignKey, BelongsTo} from 'sequelize-typescript';
 import {User} from './user.model';
+import {getEnumKeyFromValue} from "../util/enum.util";
+import {ObsType} from "./ObservationType";
+import {ObsStatus} from "./ObservationStatus";
 
 @Table({tableName: 'observation', timestamps: false})
 export class Observation extends Model<Observation> {
@@ -101,16 +104,16 @@ export class ObservationResponse implements IObservationResponse {
     actionAt: Date | null;
     createdBy: number;
 
-    constructor(id: number, description: string, type: string, latitude: number, longitude: number,
-                createdAt: Date, status: string, actionAt: Date | null, createdBy: number) {
-        this.id = id;
-        this.description = description;
-        this.type = type;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.createdAt = createdAt;
-        this.status = status;
-        this.actionAt = actionAt;
-        this.createdBy = createdBy;
+    constructor(observation: Observation) {
+        this.id = observation.id;
+        this.description = observation.description;
+        this.type = getEnumKeyFromValue(observation.type, ObsType) || "";
+        this.latitude = observation.gps_lat;
+        this.longitude = observation.gps_long;
+        this.createdAt = observation.created_at;
+        this.status = getEnumKeyFromValue(observation.status, ObsStatus) || "";
+        this.actionAt = observation.action_at ? observation.action_at : null;
+        this.createdBy = observation.created_by;
     }
+
 }

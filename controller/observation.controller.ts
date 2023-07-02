@@ -15,6 +15,7 @@ import {
 import {getValidEnumValue} from "../util/enum.util";
 import {ObsType} from "../model/ObservationType";
 import {ObsStatus} from "../model/ObservationStatus";
+import {ObservationResponse} from "../model/observation.model";
 
 export async function createObservationHandler(req: Request, res: Response) {
     const obsRequest = req.body;
@@ -78,13 +79,29 @@ export async function getObservationsByStatusHandler(req: Request, res: Response
     //if admin, filter all
     if (req.isAdmin) {
         logger.info("user is admin, getting all observations")
-        const resList = await getAllByStatus(parseInt(enumVal));
-        res.status(200)
-            .send(resList);
+        await getAllByStatus(parseInt(enumVal))
+            .then(obs => {
+                const resList = obs.map(obs => new ObservationResponse(obs))
+                res.status(200)
+                    .send(resList);
+            }).catch(e => {
+                logger.error(e);
+                return res.status(500)
+                    .json({message: 'Oops! Error: ' + e.message})
+                    .send();
+            });
     } else { //else show only current user's
-        const resList = await getByStatusAndUserId(parseInt(enumVal), req.currentUser.id);
-        res.status(200)
-            .send(resList);
+        await getByStatusAndUserId(parseInt(enumVal), req.currentUser.id)
+            .then(obs => {
+                const resList = obs.map(obs => new ObservationResponse(obs))
+                res.status(200)
+                    .send(resList);
+            }).catch(e => {
+                logger.error(e);
+                return res.status(500)
+                    .json({message: 'Oops! Error: ' + e.message})
+                    .send();
+            });
     }
 }
 
@@ -99,13 +116,27 @@ export async function getObservationsByTypeHandler(req: Request, res: Response) 
     }
 
     if (req.isAdmin) {
-        const resList = await getObsByType(parseInt(enumVal));
-        res.status(200)
-            .send(resList);
+        await getObsByType(parseInt(enumVal)).then(obs => {
+            const resList = obs.map(obs => new ObservationResponse(obs))
+            res.status(200)
+                .send(resList);
+        }).catch(e => {
+            logger.error(e);
+            return res.status(500)
+                .json({message: 'Oops! Error: ' + e.message})
+                .send();
+        });
     } else { //show only current user's
-        const resList = await getObsByTypeAndUser(parseInt(enumVal), req.currentUser.id);
-        res.status(200)
-            .send(resList);
+        await getObsByTypeAndUser(parseInt(enumVal), req.currentUser.id).then(obs => {
+            const resList = obs.map(obs => new ObservationResponse(obs))
+            res.status(200)
+                .send(resList);
+        }).catch(e => {
+            logger.error(e);
+            return res.status(500)
+                .json({message: 'Oops! Error: ' + e.message})
+                .send();
+        });
     }
 }
 

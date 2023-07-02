@@ -31,11 +31,7 @@ export async function createObservation(observationRequest: IObservationRequest,
     logger.debug("created observation:" + JSON.stringify(obs));
     await obs.save();
 
-    let res = new ObservationResponse(obs.id, observationRequest.description,
-        observationRequest.type, observationRequest.latitude, observationRequest.longitude,
-        obs.created_at, "pending", null, userId);
-
-    return res;
+    return new ObservationResponse(obs);
 }
 
 export function getAllByStatus(reqStatusEnum: ObsStatus): Promise<Observation[]> {
