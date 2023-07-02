@@ -8,17 +8,17 @@ import {getValidEnumValue} from "../util/enum.util";
 
 export async function createUserHandler(
     req: Request<{}, {}, CreateUserInput['body']>, res: Response) {
+    const userRequest = req.body;
+
+    //validate if type is part of enum list
+    const enumVal = getValidEnumValue(userRequest.role, UserRole);
+    if (!enumVal) {
+        logger.info("user role doesn't exist: ", userRequest.role)
+        return res.status(400)
+            .send('user role name not valid');
+    }
+
     try {
-        const userRequest = req.body;
-
-        //validate if type is part of enum list
-        const enumVal = getValidEnumValue(userRequest.role, UserRole);
-        if (!enumVal) {
-            logger.info("user role doesn't exist: ", userRequest.role)
-            return res.status(400)
-                .send('user role name not valid');
-        }
-
         const userResponse = await createUser(userRequest);
         if (!userResponse) {
             return res.status(500)
@@ -27,25 +27,25 @@ export async function createUserHandler(
         return res.status(201) //created
             .send(userResponse);
     } catch (e: any) {
-        logger.error(e);
         return res.status(500)
-            .send(e);
+            .json({message: e.message})
+            .send();
     }
 }
 
 export async function updateUserHandler(
     req: Request<{}, {}, UpdateUserInput['body']>, res: Response) {
+    const userRequest = req.body;
+
+    //validate if type is part of enum list
+    const enumVal = getValidEnumValue(userRequest.role, UserRole);
+    if (!enumVal) {
+        logger.info("user role doesn't exist: ", userRequest.role)
+        return res.status(400)
+            .send('user role name not valid');
+    }
+
     try {
-        const userRequest = req.body;
-
-        //validate if type is part of enum list
-        const enumVal = getValidEnumValue(userRequest.role, UserRole);
-        if (!enumVal) {
-            logger.info("user role doesn't exist: ", userRequest.role)
-            return res.status(400)
-                .send('user role name not valid');
-        }
-
         const userResponse = await updateUser(userRequest);
         if (!userResponse) {
             return res.status(500)
@@ -54,9 +54,9 @@ export async function updateUserHandler(
         return res.status(200)
             .send(userResponse);
     } catch (e: any) {
-        logger.error(e);
         return res.status(500)
-            .send(e);
+            .json({message: e.message})
+            .send();
     }
 }
 

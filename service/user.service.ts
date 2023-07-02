@@ -1,8 +1,16 @@
 import logger from '../util/logger';
 import {IUserInput, IUserResponse, IUserUpdateInput, User, UserResponse} from "../model/user.model";
+import {Op} from "sequelize";
 
 export async function createUser(userRequest: IUserInput): Promise<IUserResponse | undefined> {
     logger.info("creating user:" + JSON.stringify(userRequest));
+
+    //check if user already exists
+    const userFound = await User.findOne({where: {username: userRequest.username}});
+    if (userFound !== null) {
+        logger.error("user already exists");
+        throw new Error("User with same username already exists");
+    }
 
     //map fields to user model
     let user: User = new User();
@@ -30,6 +38,19 @@ export async function updateUser(userRequest: IUserUpdateInput): Promise<UserRes
             return undefined;
         }
 
+        //check if another user exists with same username
+        const anotherUserFound = await User.findOne(
+            {
+                where: {
+                    username: userRequest.username,
+                    id: {[Op.ne]: userRequest.id}
+                }
+            });
+        if (anotherUserFound !== null) {
+            logger.error("Another user with same username exists");
+            throw new Error("Another user with same username exists");
+        }
+
         // Update user properties
         userFound.username = userRequest.username;
         userFound.password = userRequest.password;
@@ -54,10 +75,6 @@ export async function getByUsername(username: string): Promise<User | null> {
 
 export function getAllUsers(): Promise<User[]> {
     return User.findAll();
-}
-
-export async function authenticate(username: string, password: string) {
-    //todo: get user from db based on username, check password after encryption, return jwt token, jwt exp etc
 }
 
 export async function deleteById(id: number): Promise<number> {
