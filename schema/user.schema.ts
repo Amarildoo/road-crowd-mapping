@@ -1,3 +1,4 @@
+import * as z from "zod";
 import {number, object, string, TypeOf} from "zod";
 
 /**
@@ -49,3 +50,17 @@ export const updateUserSchema = object({
 });
 
 export type UpdateUserInput = TypeOf<typeof updateUserSchema>;
+
+export const userIdPramSchema = z.object({
+    params: z.object({
+
+        userId: z.string()
+            .transform(value => parseInt(value, 10))
+            .refine(value => !isNaN(value), {
+                message: 'Invalid ID format'
+            }).refine(value => value > 0, {
+                message: 'Id should be > 0'
+            })
+
+    })
+});

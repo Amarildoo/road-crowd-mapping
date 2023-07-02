@@ -6,9 +6,25 @@ import {
     updateUserHandler
 } from "./controller/user.controller";
 import validateResource from "./middleware/ValidateResource";
-import {createUserSchema, updateUserSchema} from "./schema/user.schema";
-import {createObservationHandler, getObservationsByStatusHandler} from "./controller/observation.controller";
-import {createObservationSchema, statusObsSchema} from "./schema/observation.schema";
+import {createUserSchema, updateUserSchema, userIdPramSchema} from "./schema/user.schema";
+import {
+    approveObsByIdHandler,
+    approveObsByTypeHandler,
+    approveObsByUserHandler,
+    createObservationHandler,
+    deleteObservationByIdHandler,
+    getObservationsByStatusHandler, getObservationsByTypeHandler,
+    rejectObsByIdHandler,
+    rejectObsByUserHandler,
+    updateObservationHandler
+} from "./controller/observation.controller";
+import {
+    createObservationSchema,
+    obsIdPramSchema,
+    obsTypeQuerySchema,
+    statusObsSchema,
+    updateObservationSchema
+} from "./schema/observation.schema";
 import {authenticateSchema} from "./schema/auth.schema";
 import {authenticationHandler} from "./controller/authentication.controller";
 import tokenAuthenticator from "./middleware/authentication";
@@ -37,8 +53,31 @@ function routes(app: Express) {
     app.post("/authenticate", validateResource(authenticateSchema), authenticationHandler);
 
     //observation routes
-    app.post("/observations", validateResource(createObservationSchema), createObservationHandler);
-    app.get("/observations/by-status", validateResource(statusObsSchema), getObservationsByStatusHandler);
+    app.post("/observations", [validateResource(createObservationSchema), tokenAuthenticator],
+        createObservationHandler);
+    app.put("/observations", [validateResource(updateObservationSchema), tokenAuthenticator],
+        updateObservationHandler);
+    app.get("/observations/by-status/", [validateResource(statusObsSchema), tokenAuthenticator, adminVerifier],
+        getObservationsByStatusHandler);
+    app.get("/observations/by-type", [validateResource(obsTypeQuerySchema), tokenAuthenticator, adminVerifier],
+        getObservationsByTypeHandler);
+    app.delete("/observations/:obsId", [validateResource(obsIdPramSchema), tokenAuthenticator],
+        deleteObservationByIdHandler);
+    app.put("/observations/approve/:obsId",
+        [validateResource(obsIdPramSchema), tokenAuthenticator, adminVerifier],
+        approveObsByIdHandler);
+    app.put("/observations/reject/:obsId",
+        [validateResource(obsIdPramSchema), tokenAuthenticator, adminVerifier],
+        rejectObsByIdHandler);
+    app.put("/observations/approve/user/:userId",
+        [validateResource(userIdPramSchema), tokenAuthenticator, adminVerifier],
+        approveObsByUserHandler);
+    app.put("/observations/reject/user/:userId",
+        [validateResource(userIdPramSchema), tokenAuthenticator, adminVerifier],
+        rejectObsByUserHandler);
+    app.put("/observations/approve/type",
+        [tokenAuthenticator, adminVerifier],
+        approveObsByTypeHandler);
 
 
 }

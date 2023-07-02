@@ -7,7 +7,7 @@ const sequelize = new Sequelize({
     username: process.env.DB_USERNAME || 'rcm-username',
     password: process.env.DB_PASSWORD || 'rcm-password',
     dialect: 'postgres',
-    host: process.env.DB_HOST || "localhost",
+    host: process.env.DB_HOST || "db",
     port: 5432,
     models: [User, Observation],
 });

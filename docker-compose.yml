@@ -10,6 +10,8 @@ services:
       context: ./
     ports:
       - "3001:3001"
+    depends_on:
+      - db
 
   db:
     image: postgres
