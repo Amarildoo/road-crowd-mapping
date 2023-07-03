@@ -64,6 +64,23 @@ export function getByStatusAndUserId(reqStatusEnum: ObsStatus, userId: number): 
     });
 }
 
+export function getObservationsByUserId(userId: number): Promise<Observation[]> {
+    return Observation.findAll({
+        where: {
+            created_by: userId
+        }
+    });
+}
+
+export function getByObsIdAndUserId(obsId: number, userId: number): Promise<Observation | null> {
+    return Observation.findOne({
+        where: {
+            created_by: userId,
+            id: obsId
+        }
+    });
+}
+
 export async function updateObservationByUserId(request: IObservationUpdateRequest, userId: number): Promise<void> {
     logger.info("updating observation:" + JSON.stringify(request));
     //get obs in DB by id and creator id

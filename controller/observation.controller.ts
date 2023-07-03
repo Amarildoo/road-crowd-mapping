@@ -10,7 +10,7 @@ import {
     getByStatusAndUserId,
     rejectAllByUser,
     rejectObservation,
-    updateObservationByUserId, getObsByTypeAndUser
+    updateObservationByUserId, getObsByTypeAndUser, getByObsIdAndUserId, getObservationsByUserId
 } from "../service/observation.service";
 import {getValidEnumValue} from "../util/enum.util";
 import {ObsType} from "../model/ObservationType";
@@ -102,6 +102,37 @@ export async function getObservationsByStatusHandler(req: Request, res: Response
                     .json({message: 'Oops! Error: ' + e.message})
                     .send();
             });
+    }
+}
+
+export async function getObservationsByLoggedUserHandler(req: Request, res: Response) {
+    await getObservationsByUserId(req.currentUser.id)
+        .then(obs => {
+            const resList = obs.map(obs => new ObservationResponse(obs))
+            res.status(200)
+                .send(resList);
+        }).catch(e => {
+            logger.error(e);
+            return res.status(500)
+                .json({message: 'Oops! Error: ' + e.message})
+                .send();
+        });
+}
+
+export async function getObservationsByIdHandler(req: Request, res: Response) {
+    try {
+        const obsFound = await getByObsIdAndUserId(parseInt(req.params.obsId.toString()), req.currentUser.id);
+        if (!obsFound) {
+            return res.status(404)
+                .json({message: 'Observation not found'})
+                .send();
+        }
+        return res.status(200)
+            .send(new ObservationResponse(obsFound));
+    } catch (e: any) {
+        return res.status(500)
+            .json({message: 'Oops! Error: ' + e.message})
+            .send();
     }
 }
 
