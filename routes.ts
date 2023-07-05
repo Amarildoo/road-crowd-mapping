@@ -39,22 +39,27 @@ import {resLimitPramSchema} from "./schema/app.schema";
  */
 function routes(app: Express) {
 
-    app.get("/healthcheck", (req: Request, res: Response) => {
-        res.sendStatus(200)
-    });
-
     app.get('/', (req, res) => {
         res.send('Hello World from Express server with TS!')
     });
+
+    //authentication
+    app.post("/authenticate", validateResource(authenticateSchema), authenticationHandler);
 
     //users routes
     app.post("/users", [validateResource(createUserSchema), tokenAuthenticator, adminVerifier], createUserHandler);
     app.put("/users", [validateResource(updateUserSchema), tokenAuthenticator, adminVerifier], updateUserHandler);
     app.get("/users", [tokenAuthenticator, adminVerifier], getAllUsersHandler);
+    app.get("/users/most-observations/limit/:resLimit",
+        [validateResource(resLimitPramSchema), tokenAuthenticator, adminVerifier],
+        usersByMostObsHandler);
+    app.get("/users/most-observations/approved/limit/:resLimit",
+        [validateResource(resLimitPramSchema), tokenAuthenticator, adminVerifier],
+        usersByMostObsApprovedHandler);
+    app.get("/users/most-observations/rejected/limit/:resLimit",
+        [validateResource(resLimitPramSchema), tokenAuthenticator, adminVerifier],
+        usersByMostObsRejectedHandler);
     app.delete("/users/:userId", [tokenAuthenticator, adminVerifier], deleteUserHandler);
-
-    //authentication
-    app.post("/authenticate", validateResource(authenticateSchema), authenticationHandler);
 
     //observation routes
     app.post("/observations", [validateResource(createObservationSchema), tokenAuthenticator],

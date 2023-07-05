@@ -1,6 +1,17 @@
 import logger from '../util/logger';
-import {IUserInput, IUserResponse, IUserUpdateInput, User, UserResponse} from "../model/user.model";
+import {
+    IUserInput,
+    IUserResponse,
+    IUserTotalObs,
+    IUserUpdateInput,
+    User,
+    UserResponse,
+    UserTotalObs
+} from "../model/user.model";
 import {Op} from "sequelize";
+import {ObsStatus} from "../model/ObservationStatus";
+import sequelize from "../database";
+import { QueryTypes } from 'sequelize';
 
 export async function createUser(userRequest: IUserInput): Promise<IUserResponse | undefined> {
     logger.info("creating user:" + JSON.stringify(userRequest));
@@ -75,6 +86,92 @@ export async function getByUsername(username: string): Promise<User | null> {
 
 export function getAllUsers(): Promise<User[]> {
     return User.findAll();
+}
+
+export async function getUsersWithMostObservations(limit: number): Promise<IUserTotalObs[]> {
+    try {
+
+        const query = "select u.id, u.username, count(o.id) as total" +
+            " from \"user\" as u inner join observation o on u.id = o.created_by" +
+            " group by u.id, u.username" +
+            " order by total desc limit :limit;"
+        const params = {limit: limit};
+
+        const result = await sequelize.query(query,
+            {
+                replacements: params,
+                type: QueryTypes.SELECT,
+            });
+
+        //map result
+        const mappedResult: UserTotalObs[] = result.map(
+            (row: any) => (new UserTotalObs(row.id, row.username, row.total)));
+        return mappedResult;
+
+    } catch (error) {
+        console.error('Error getting users with most observations:', error);
+        throw error;
+    }
+}
+
+export async function getUsersWithMostApprovedObservations(limit: number): Promise<IUserTotalObs[]> {
+    try {
+
+        const query = "select u.id, u.username, count(o.id) as total" +
+            " from \"user\" as u inner join observation o on u.id = o.created_by" +
+            " where o.status = :accepted" +
+            " group by u.id, u.username" +
+            " order by total desc limit :limit;";
+        const params = {
+            accepted: ObsStatus.ACCEPTED,
+            limit: limit
+        };
+
+        const result = await sequelize.query(query,
+            {
+                replacements: params,
+                type: QueryTypes.SELECT,
+            });
+
+        //map result
+        const mappedResult: UserTotalObs[] = result.map(
+            (row: any) => (new UserTotalObs(row.id, row.username, row.total)));
+        return mappedResult;
+
+    } catch (error) {
+        console.error('Error getting users with most observations:', error);
+        throw error;
+    }
+}
+
+export async function getUsersWithMostRejectedObservations(limit: number): Promise<IUserTotalObs[]> {
+    try {
+
+        const query = "select u.id, u.username, count(o.id) as total" +
+            " from \"user\" as u inner join observation o on u.id = o.created_by" +
+            " where o.status = :accepted" +
+            " group by u.id, u.username" +
+            " order by total desc limit :limit;";
+        const params = {
+            accepted: ObsStatus.REJECTED,
+            limit: limit
+        };
+
+        const result = await sequelize.query(query,
+            {
+                replacements: params,
+                type: QueryTypes.SELECT,
+            });
+
+        //map result
+        const mappedResult: UserTotalObs[] = result.map(
+            (row: any) => (new UserTotalObs(row.id, row.username, row.total)));
+        return mappedResult;
+
+    } catch (error) {
+        console.error('Error getting users with most observations:', error);
+        throw error;
+    }
 }
 
 export async function deleteById(id: number): Promise<number> {

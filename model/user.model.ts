@@ -33,8 +33,8 @@ export class User extends Model<User> {
     })
     role!: string;
 
-    @HasMany(() => Observation)
-    observations!: Observation[];
+    @HasMany(() => Observation, 'created_by')
+    observations!: Observation[]; // Make sure the association alias matches the one used in the query
 
     @BeforeCreate
     static async hashPassword(instance: User) {
@@ -79,5 +79,24 @@ export class UserResponse implements IUserResponse {
         this.id = id;
         this.username = username;
         this.role = role;
+    }
+}
+
+
+export interface IUserTotalObs {
+    id: number;
+    username: string;
+    totalObs: number;
+}
+
+export class UserTotalObs implements IUserTotalObs {
+    id: number;
+    username: string;
+    totalObs: number;
+
+    constructor(id: number, username: string, totalObs: number) {
+        this.id = id;
+        this.username = username;
+        this.totalObs = totalObs;
     }
 }

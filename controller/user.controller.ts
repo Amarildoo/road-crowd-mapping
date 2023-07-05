@@ -1,8 +1,16 @@
 import {Request, Response} from "express";
 import logger from "../util/logger";
-import {createUser, deleteById, getAllUsers, updateUser} from "../service/user.service";
+import {
+    createUser,
+    deleteById,
+    getAllUsers,
+    getUsersWithMostApprovedObservations,
+    getUsersWithMostObservations,
+    getUsersWithMostRejectedObservations,
+    updateUser
+} from "../service/user.service";
 import {CreateUserInput, UpdateUserInput} from "../schema/user.schema";
-import {IUserResponse, User, UserResponse} from "../model/user.model";
+import {IUserTotalObs, User, UserResponse} from "../model/user.model";
 import {UserRole} from "../model/UserRole";
 import {getValidEnumValue} from "../util/enum.util";
 
@@ -63,14 +71,44 @@ export async function updateUserHandler(
 export async function getAllUsersHandler(req: Request, res: Response) {
     try {
         const users: User[] = await getAllUsers();
-        let restList: IUserResponse[] = new Array<IUserResponse>;
-        //map to response object (ignoring password field)
-        users.forEach(u => restList.push(new UserResponse(u.id, u.username, u.role)));
-        //return list of users
+        const resList = users.map(u => new UserResponse(u.id, u.username, u.role));
         return res.status(200)
-            .send(restList);
+            .send(resList);
     } catch (error) {
         console.error('Error retrieving users:', error);
+        return res.status(200)
+            .send(error);
+    }
+}
+
+export async function usersByMostObsHandler(req: Request, res: Response) {
+    try {
+        const users: IUserTotalObs[] = await getUsersWithMostObservations(parseInt(req.params.resLimit.toString()));
+        return res.status(200)
+            .send(users);
+    } catch (error) {
+        return res.status(200)
+            .send(error);
+    }
+}
+
+export async function usersByMostObsApprovedHandler(req: Request, res: Response) {
+    try {
+        const resList: IUserTotalObs[] = await getUsersWithMostApprovedObservations(parseInt(req.params.resLimit.toString()));
+        return res.status(200)
+            .send(resList);
+    } catch (error) {
+        return res.status(200)
+            .send(error);
+    }
+}
+
+export async function usersByMostObsRejectedHandler(req: Request, res: Response) {
+    try {
+        const resList: IUserTotalObs[] = await getUsersWithMostRejectedObservations(parseInt(req.params.resLimit.toString()));
+        return res.status(200)
+            .send(resList);
+    } catch (error) {
         return res.status(200)
             .send(error);
     }
