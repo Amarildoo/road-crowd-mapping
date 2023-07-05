@@ -3,7 +3,7 @@ import {
     createUserHandler,
     deleteUserHandler,
     getAllUsersHandler,
-    updateUserHandler
+    updateUserHandler, usersByMostObsApprovedHandler, usersByMostObsHandler, usersByMostObsRejectedHandler
 } from "./controller/user.controller";
 import validateResource from "./middleware/ValidateResource";
 import {createUserSchema, updateUserSchema, userIdPramSchema} from "./schema/user.schema";
@@ -13,7 +13,10 @@ import {
     approveObsByUserHandler,
     createObservationHandler,
     deleteObservationByIdHandler,
-    getObservationsByStatusHandler, getObservationsByTypeHandler,
+    getObservationsByIdHandler,
+    getObservationsByLoggedUserHandler,
+    getObservationsByStatusHandler,
+    getObservationsByTypeHandler,
     rejectObsByIdHandler,
     rejectObsByUserHandler,
     updateObservationHandler
@@ -29,6 +32,7 @@ import {authenticateSchema} from "./schema/auth.schema";
 import {authenticationHandler} from "./controller/authentication.controller";
 import tokenAuthenticator from "./middleware/authentication";
 import adminVerifier from "./middleware/AdminVerifier";
+import {resLimitPramSchema} from "./schema/app.schema";
 
 /**
  * definition of routes and request validators (using ZOD)
@@ -59,11 +63,14 @@ function routes(app: Express) {
         updateObservationHandler);
     app.get("/observations/by-status/", [validateResource(statusObsSchema), tokenAuthenticator, adminVerifier],
         getObservationsByStatusHandler);
+    app.get("/observations/mine", [tokenAuthenticator], getObservationsByLoggedUserHandler);
+    app.get("/observations/mine/id/:obsId", [validateResource(obsIdPramSchema), tokenAuthenticator], getObservationsByIdHandler);
     app.get("/observations/by-type", [validateResource(obsTypeQuerySchema), tokenAuthenticator, adminVerifier],
         getObservationsByTypeHandler);
     app.delete("/observations/:obsId", [validateResource(obsIdPramSchema), tokenAuthenticator],
         deleteObservationByIdHandler);
-    app.put("/observations/approve/:obsId",
+    app.put("/observations/approve/type/", [tokenAuthenticator, adminVerifier], approveObsByTypeHandler);
+    app.put("/observations/approve/id/:obsId",
         [validateResource(obsIdPramSchema), tokenAuthenticator, adminVerifier],
         approveObsByIdHandler);
     app.put("/observations/reject/:obsId",
@@ -75,10 +82,6 @@ function routes(app: Express) {
     app.put("/observations/reject/user/:userId",
         [validateResource(userIdPramSchema), tokenAuthenticator, adminVerifier],
         rejectObsByUserHandler);
-    app.put("/observations/approve/type",
-        [tokenAuthenticator, adminVerifier],
-        approveObsByTypeHandler);
-
 
 }
 
