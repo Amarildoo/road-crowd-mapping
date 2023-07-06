@@ -1,16 +1,21 @@
 import {Request, Response} from "express";
 import logger from "../util/logger";
 import {
-    approveAllByType, approveAllByUser,
+    approveAllByType,
+    approveAllByUser,
     approveObservation,
     createObservation,
     deleteByIdAndUserId,
     deleteObsById,
-    getAllByStatus, getObsByType,
+    getAllByStatus,
+    getByObsIdAndUserId,
     getByStatusAndUserId,
+    getObsByType,
+    getObsByTypeAndUser,
+    getObservationsByUserId,
     rejectAllByUser,
     rejectObservation,
-    updateObservationByUserId, getObsByTypeAndUser, getByObsIdAndUserId, getObservationsByUserId
+    updateObservationByUserId
 } from "../service/observation.service";
 import {getValidEnumValue} from "../util/enum.util";
 import {ObsType} from "../model/ObservationType";

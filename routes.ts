@@ -1,9 +1,12 @@
-import {Express, Request, Response} from 'express';
+import {Express} from 'express';
 import {
     createUserHandler,
     deleteUserHandler,
     getAllUsersHandler,
-    updateUserHandler, usersByMostObsApprovedHandler, usersByMostObsHandler, usersByMostObsRejectedHandler
+    updateUserHandler,
+    usersByMostObsApprovedHandler,
+    usersByMostObsHandler,
+    usersByMostObsRejectedHandler
 } from "./controller/user.controller";
 import validateResource from "./middleware/ValidateResource";
 import {createUserSchema, updateUserSchema, userIdPramSchema} from "./schema/user.schema";
