@@ -1,6 +1,9 @@
 import {Sequelize} from 'sequelize-typescript';
 import {User} from "./model/user.model";
 import {Observation} from "./model/observation.model";
+import env from 'dotenv';
+
+env.config();
 
 const sequelize = new Sequelize({
     database: process.env.DB_SCHEMA || 'rcm',
