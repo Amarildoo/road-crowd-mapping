@@ -36,6 +36,8 @@ import {authenticationHandler} from "./controller/authentication.controller";
 import tokenAuthenticator from "./middleware/authentication";
 import adminVerifier from "./middleware/AdminVerifier";
 import {resLimitPramSchema} from "./schema/app.schema";
+import {gpsLocationSchema} from "./schema/location.schema";
+import {locationByGpsHandler} from "./controller/location.controller";
 
 /**
  * definition of routes and request validators (using ZOD)
@@ -90,6 +92,9 @@ function routes(app: Express) {
     app.put("/observations/reject/user/:userId",
         [validateResource(userIdPramSchema), tokenAuthenticator, adminVerifier],
         rejectObsByUserHandler);
+
+    //location
+    app.get("/location/city", [validateResource(gpsLocationSchema), tokenAuthenticator], locationByGpsHandler);
 
 }
 
