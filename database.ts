@@ -13,6 +13,12 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST || "db",
     port: 5432,
     models: [User, Observation],
+    pool: {
+        max: 4,
+        min: 1,
+        acquire: 30000,
+        idle: 10000
+    }
 });
 
 export default sequelize;
