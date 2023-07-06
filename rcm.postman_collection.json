@@ -11,11 +11,21 @@
 				{
 					"name": "create user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test2\",\n    \"password\": \"password\",\n    \"role\": \"user\"\n}",
+							"raw": "{\n    \"username\": \"username\",\n    \"password\": \"password\",\n    \"role\": \"user\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -94,6 +104,134 @@
 							],
 							"path": [
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by most observations",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rcm-url}}/users/most-observations/limit/3",
+							"host": [
+								"{{rcm-url}}"
+							],
+							"path": [
+								"users",
+								"most-observations",
+								"limit",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by most observations approved",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rcm-url}}/users/most-observations/approved/limit/3",
+							"host": [
+								"{{rcm-url}}"
+							],
+							"path": [
+								"users",
+								"most-observations",
+								"approved",
+								"limit",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by most observations rejected",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rcm-url}}/users/most-observations/rejected/limit/3",
+							"host": [
+								"{{rcm-url}}"
+							],
+							"path": [
+								"users",
+								"most-observations",
+								"rejected",
+								"limit",
+								"3"
 							]
 						}
 					},
@@ -278,6 +416,88 @@
 					"response": []
 				},
 				{
+					"name": "get mine",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rcm-url}}/observations/mine",
+							"host": [
+								"{{rcm-url}}"
+							],
+							"path": [
+								"observations",
+								"mine"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get mine by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{rcm-url}}/observations/mine/id/4",
+							"host": [
+								"{{rcm-url}}"
+							],
+							"path": [
+								"observations",
+								"mine",
+								"id",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get by type",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -305,7 +525,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{rcm-url}}/observations/by-type?obsType=CLOSURE",
+							"raw": "{{rcm-url}}/observations/by-type?obsType=OBSTACLE",
 							"host": [
 								"{{rcm-url}}"
 							],
@@ -321,12 +541,12 @@
 								},
 								{
 									"key": "obsType",
-									"value": "OBSTACLE",
-									"disabled": true
+									"value": "OBSTACLE"
 								},
 								{
 									"key": "obsType",
-									"value": "CLOSURE"
+									"value": "CLOSURE",
+									"disabled": true
 								}
 							]
 						}
@@ -395,13 +615,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{rcm-url}}/observations/approve/4",
+							"raw": "{{rcm-url}}/observations/approve/id/4",
 							"host": [
 								"{{rcm-url}}"
 							],
 							"path": [
 								"observations",
 								"approve",
+								"id",
 								"4"
 							]
 						}
@@ -549,7 +770,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{rcm-url}}/observations/approve/type?obsType=POTHOLE",
+							"raw": "{{rcm-url}}/observations/approve/type?obsType=OBSTACLE",
 							"host": [
 								"{{rcm-url}}"
 							],
@@ -561,7 +782,7 @@
 							"query": [
 								{
 									"key": "obsType",
-									"value": "POTHOLE"
+									"value": "OBSTACLE"
 								}
 							]
 						}
