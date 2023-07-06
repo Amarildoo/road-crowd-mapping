@@ -3,6 +3,7 @@ import {User} from './user.model';
 import {getEnumKeyFromValue} from "../util/enum.util";
 import {ObsType} from "./ObservationType";
 import {ObsStatus} from "./ObservationStatus";
+import dayjs from "dayjs";
 
 @Table({tableName: 'observation', timestamps: false})
 export class Observation extends Model<Observation> {
@@ -87,9 +88,9 @@ export interface IObservationResponse {
     type: string;
     latitude: number;
     longitude: number;
-    createdAt: Date;
+    createdAt: string;
     status: string;
-    actionAt: Date | null;
+    actionAt: string | null;
     createdBy: number;
 }
 
@@ -99,9 +100,9 @@ export class ObservationResponse implements IObservationResponse {
     type: string;
     latitude: number;
     longitude: number;
-    createdAt: Date;
+    createdAt: string;
     status: string;
-    actionAt: Date | null;
+    actionAt: string | null;
     createdBy: number;
 
     constructor(observation: Observation) {
@@ -110,10 +111,13 @@ export class ObservationResponse implements IObservationResponse {
         this.type = getEnumKeyFromValue(observation.type, ObsType) || "";
         this.latitude = observation.gps_lat;
         this.longitude = observation.gps_long;
-        this.createdAt = observation.created_at;
         this.status = getEnumKeyFromValue(observation.status, ObsStatus) || "";
-        this.actionAt = observation.action_at ? observation.action_at : null;
         this.createdBy = observation.created_by;
+
+        if (observation.action_at)
+            this.actionAt = dayjs(observation.action_at).format("DD-MM-YYYY HH:mm:ss");
+        else this.actionAt = null;
+        this.createdAt = dayjs(observation.createdAt).format("DD-MM-YYYY HH:mm:ss");
     }
 
 }
