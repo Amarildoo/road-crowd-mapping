@@ -95,11 +95,7 @@ export async function updateObservationByUserId(request: IObservationUpdateReque
         throw Error("Observation not found");
     }
     const obsFound = obsList[0];
-    //if action_date is not null, cant update
-    if (obsFound.action_at != null) {
-        throw Error("Can't update, observation already approved/rejected!");
-    }
-
+    obsFound.status = ObsStatus.PENDING; //set status as Pending (task requirement)
     obsFound.description = request.description;
     let obsEnumVal = getValidEnumValue(request.type, ObsType);
     if (!obsEnumVal) {
