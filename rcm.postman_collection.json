@@ -303,7 +303,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"description\": \"Aliens having a protest!\",\n    \"type\": \"CLOSURE\",\n    \"latitude\": 45.545,\n    \"longitude\": 65.6458\n}",
+							"raw": "{\n    \"description\": \"Aliens having a party!\",\n    \"type\": \"CLOSURE\",\n    \"latitude\": 45.545,\n    \"longitude\": 65.6458\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -815,6 +815,49 @@
 							],
 							"path": [
 								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "location",
+			"item": [
+				{
+					"name": "get city by location",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{rcm-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rcm-url}}/location/city?gpsLong=-0.1180&gpsLat=51.509",
+							"host": [
+								"{{rcm-url}}"
+							],
+							"path": [
+								"location",
+								"city"
+							],
+							"query": [
+								{
+									"key": "gpsLong",
+									"value": "-0.1180"
+								},
+								{
+									"key": "gpsLat",
+									"value": "51.509"
+								}
 							]
 						}
 					},
