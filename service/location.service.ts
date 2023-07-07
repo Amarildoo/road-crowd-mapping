@@ -1,5 +1,6 @@
 import * as http from "http";
 import logger from "../util/logger";
+import {ApiLocation} from "../model/location.model";
 
 export function getCitiesByLocation(gpsLat: number, gpsLong: number): Promise<unknown> {
     const mapKey = process.env.MAP_KEY || 'no key';
@@ -15,9 +16,10 @@ export function getCitiesByLocation(gpsLat: number, gpsLong: number): Promise<un
             });
 
             res.on('end', () => {
-                const locationData = JSON.parse(data);
-                console.log(locationData);
-                resolve(locationData);
+                const locationData: ApiLocation[] = JSON.parse(data);
+                const locations: string[] = [];
+                locationData.forEach(location => locations.push(location.name));
+                resolve(locations);
             });
         }).on('error', err => {
             logger.error("Error fetching location data: " + err);

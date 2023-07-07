@@ -21,7 +21,7 @@ export async function locationByGpsHandler(req: Request, res: Response) {
     getCitiesByLocation(gLatNumber, gLongNumber)
         .then((cities) => {
             return res.status(200)
-                .json({apiRes: cities})
+                .json({cities: cities})
                 .send();
         })
         .catch(err => {
